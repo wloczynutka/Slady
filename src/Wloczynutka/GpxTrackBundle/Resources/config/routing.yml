@@ -1,0 +1,3 @@
+gpx_track_homepage:
+    path:     /gpxTrack/{name}
+    defaults: { _controller: GpxTrackBundle:Default:index }

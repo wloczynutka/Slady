@@ -1,0 +1,4 @@
+services:
+#    gpx_track.example:
+#        class: Wloczynutka\GpxTrackBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

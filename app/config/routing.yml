@@ -1,3 +1,7 @@
+gpx_track:
+    resource: "@GpxTrackBundle/Resources/config/routing.yml"
+    prefix:   /
+
 app:
     resource: @AppBundle/Controller/
     type:     annotation
