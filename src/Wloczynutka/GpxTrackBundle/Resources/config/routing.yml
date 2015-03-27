@@ -6,6 +6,10 @@ gpx_track_taskexample:
     path:     /gpxTrack/task
     defaults: { _controller: GpxTrackBundle:Default:new }
 
+gpx_track_load:
+    path:     /gpxTrack/load/{trackid}
+    defaults: { _controller: GpxTrackBundle:Default:new }
+
 gpx_loaded:
      path:     /gpxTrack/map
      defaults: { _controller: GpxTrackBundle:Default:displayMap }

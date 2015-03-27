@@ -38,7 +38,9 @@ class DefaultController extends Controller
             $gpxFile = $request->files->all();
             $gpxString = file_get_contents($gpxFile['form']['file']->getPath().'/'.$gpxFile['form']['file']->getFilename());
             $gpx = simplexml_load_string($gpxString);
-            $tripObj = new GpxReader($gpx);
+            $tripObj = new GpxReader($this->getDoctrine());
+            $tripObj->readAndStoreTracks($gpx);
+
             $tripObj->calculate();
             $result = $tripObj->getTrip();
             $googleMapArr = $tripObj->extractData4googleMapsPolilyne();

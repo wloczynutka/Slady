@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="trackpoint")
  */
-class Trackpoint
+class TrackPoint
 {
     /**
      * @ORM\Column(type="integer")
@@ -17,10 +17,12 @@ class Trackpoint
      */
     protected $id;
 
+
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="GpxTrack", inversedBy="trackPoints")
+     * @ORM\JoinColumn(name="gpxtrack_id", referencedColumnName="id")
      */
-    protected $trackId;
+    protected $gpxTrackId;
 
     /**
      * @ORM\Column(type="float")
@@ -122,17 +124,7 @@ class Trackpoint
         return $this->elevation;
     }
 
-    /**
-     * Set time
-     *
-     * @param \DateTime $time
-     * @return Trackpoint
-     */
-    public function setTime($time)
-    {
-        $this->time = $time;
-        return $this;
-    }
+
 
     /**
      * Get time
@@ -142,5 +134,41 @@ class Trackpoint
     public function getTime()
     {
         return $this->time;
+    }
+
+    /**
+     * Set gpxTrackId
+     *
+     * @param \AppBundle\Entity\GpxTrack $gpxTrackId
+     * @return TrackPoint
+     */
+    public function setGpxTrackId(\AppBundle\Entity\GpxTrack $gpxTrackId = null)
+    {
+        $this->gpxTrackId = $gpxTrackId;
+
+        return $this;
+    }
+
+    /**
+     * Get gpxTrackId
+     *
+     * @return \AppBundle\Entity\GpxTrack 
+     */
+    public function getGpxTrackId()
+    {
+        return $this->gpxTrackId;
+    }
+
+    /**
+     * Set time
+     *
+     * @param \DateTime $time
+     * @return TrackPoint
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
+
+        return $this;
     }
 }

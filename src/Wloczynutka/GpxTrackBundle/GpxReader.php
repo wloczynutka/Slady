@@ -3,7 +3,9 @@
 namespace Wloczynutka\GpxTrackBundle;
 
 class GpxReader {
-	
+
+    private $doctrine;
+
 	// ignore errorous speed (km/h)
 	private $minAllowedSpeed = 3;
 	private $maxAllowedSpeed = 150;
@@ -17,6 +19,8 @@ class GpxReader {
 	
 	private $gpxPoints;
 
+    private $tracks;
+
 	/**
 	 * if you want change default values of spped which are tread as wrong,
 	 * pass it while creating new distanceFromGpx object. values are in km/h.
@@ -27,7 +31,7 @@ class GpxReader {
 	 * note:
 	 * use $track = new distanceFromGpx(0, 99999) to switch off ignoring wrong gpx points.
 	 */
-	public function __construct($gpx, $minAllowedSpeed = null, $maxAllowedSpeed = null)
+	public function __construct($doctrine, $minAllowedSpeed = null, $maxAllowedSpeed = null)
 	{
 		if(isset($minAllowedSpeed)) {
 			$this->minAllowedSpeed = $minAllowedSpeed;
@@ -35,7 +39,7 @@ class GpxReader {
 		if(isset($maxAllowedSpeed)) {
 			$this->minAllowedSpeed = $minAllowedSpeed;
 		}
-		$this->gpxPoints = $this->makePointsFromSimpleXml($gpx);
+		$this->doctrine = $doctrine;
 	}
 	
 	public function calculate() {
@@ -72,9 +76,6 @@ class GpxReader {
 	}
 	
 	private function makePointsFromSimpleXml($gpx) {
-		// print '<pre>';	
-		// print_r($gpx);
-		// exit;
 		foreach ($gpx->trk as $trackId => $track) {
 			$i = 0;
 			while ($track->trkseg->trkpt[$i]) {
@@ -84,6 +85,42 @@ class GpxReader {
 		}
 		return $gpxPoints;
 	}
+
+
+    public function readAndStoreTracks($gpx){
+        foreach ($gpx->trk as $trackId => $track) {
+            $gpxTrack = new \AppBundle\Entity\GpxTrack();
+            $gpxTrack->setName((string) $track->name);
+            $em = $this->doctrine->getManager();
+            $em->persist($gpxTrack);
+            $i = 0;
+            while ($track->trkseg->trkpt[$i]) {
+                $trackPoint = new \AppBundle\Entity\TrackPoint();
+                $trackPoint ->setElevation((float) $gpx->trk->trkseg->trkpt[$i]->ele)
+                            ->setTime($this->buildDateTime((string) $gpx->trk->trkseg->trkpt[$i]->time))
+                            ->setLatitude((float) $gpx->trk->trkseg->trkpt[$i]->attributes()->lon)
+                            ->setLongitude((float) $gpx->trk->trkseg->trkpt[$i]->attributes()->lat)
+                            ->setGpxTrackId($gpxTrack);
+                $gpxTrack->appendTrackPoint($trackPoint);
+                $em->persist($trackPoint);
+                $i++;
+            }
+            $em->flush();
+            $result[$gpxTrack->getId()] = $gpxTrack;
+        }
+        return $result;
+    }
+
+    /**
+     * @param $dateTimeString
+     * @return \DateTime
+     */
+    private function buildDateTime($dateTimeString){
+        $datetime = new \DateTime();
+        $timeStamp = strtotime($dateTimeString);
+        $datetime->setTimestamp($timeStamp);
+        return $datetime;
+    }
 
 	private function processGpxPoints($gpxPoints) {
 		foreach ($gpxPoints as $trackId => $track) {
