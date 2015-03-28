@@ -3,12 +3,12 @@ gpx_track_homepage:
     defaults: { _controller: GpxTrackBundle:Default:create }
 
 gpx_track_taskexample:
-    path:     /gpxTrack/task
-    defaults: { _controller: GpxTrackBundle:Default:new }
+    path:     /gpxTrack/add
+    defaults: { _controller: GpxTrackBundle:Default:add }
 
 gpx_track_load:
-    path:     /gpxTrack/load/{trackid}
-    defaults: { _controller: GpxTrackBundle:Default:new }
+    path:     /gpxTrack/load/{id}
+    defaults: { _controller: GpxTrackBundle:Default:load }
 
 gpx_loaded:
      path:     /gpxTrack/map

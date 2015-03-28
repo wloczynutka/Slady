@@ -101,7 +101,7 @@ class GpxReader {
                             ->setLatitude((float) $gpx->trk->trkseg->trkpt[$i]->attributes()->lon)
                             ->setLongitude((float) $gpx->trk->trkseg->trkpt[$i]->attributes()->lat)
                             ->setGpxTrackId($gpxTrack);
-                $gpxTrack->appendTrackPoint($trackPoint);
+                $gpxTrack->addTrackPoint($trackPoint);
                 $em->persist($trackPoint);
                 $i++;
             }

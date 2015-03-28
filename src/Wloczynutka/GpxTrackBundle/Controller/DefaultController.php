@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Product;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Task;
+use AppBundle\Entity\TrackPoint;
 use Symfony\Component\HttpFoundation\Request;
 use Wloczynutka\GpxTrackBundle\GpxReader;
 
@@ -18,7 +19,7 @@ class DefaultController extends Controller
         return $this->render('GpxTrackBundle:Default:index.html.twig', array('name' => $name));
     }
 
-    public function newAction(Request $request)
+    public function addAction(Request $request)
     {
         // create a task and give it some dummy data for this example
         $task = new Task();
@@ -77,19 +78,24 @@ class DefaultController extends Controller
     {
     }
 
+    public function loadAction($id){
+        d($id);
+        $gpxTrack = $this->getDoctrine()
+            ->getRepository('AppBundle:GpxTrack')
+            ->find($id);
+
+        $trackPoints = $gpxTrack->getTrackPoints();
+        /* @var $trackPoint TrackPoint */
+        foreach ($trackPoints as $trackPoint){
+            dd($trackPoint);
+            //$trackPoint->getElevation();
+        }
+    }
+
     public function createAction()
     {
 
 
-        $product = new Product();
-        $product->setName('A Foo Bar');
-        $product->setPrice('19.99');
-        $product->setDescription('Lorem ipsum dolor');
-
-        $em = $this->getDoctrine()->getManager();
-
-        $em->persist($product);
-        $em->flush();
 
         $result = new Response('Created product id '.$product->getId());
 

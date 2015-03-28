@@ -24,7 +24,7 @@ class GpxTrack
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="TrackPoint", mappedBy="gpxTrack")
+     * @ORM\OneToMany(targetEntity="TrackPoint", mappedBy="gpxTrackId")
      */
     protected $trackPoints;
 
@@ -63,11 +63,6 @@ class GpxTrack
     public function getName()
     {
         return $this->name;
-    }
-
-    public function appendTrackPoint(TrackPoint $trackPoint){
-//        $this->trackPoints->append($trackPoint);
-        $this->trackPoints->add($trackPoint);
     }
 
     /**
